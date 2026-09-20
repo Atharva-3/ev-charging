@@ -1,0 +1,139 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "User Account",
+      "description": "Personnel account for EV infrastructure project controllers and field technicians",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user account ID" },
+        "badgeId": { "type": "string", "description": "Employee badge number" },
+        "email": { "type": "string", "description": "Corporate email address" },
+        "passwordPin": { "type": "string", "description": "Security PIN" },
+        "name": { "type": "string", "description": "Full name" },
+        "role": { "type": "string", "enum": ["manager", "worker"], "description": "Role: manager (Site Controller) or worker (Field Operations)" },
+        "designation": { "type": "string", "description": "Job title" },
+        "department": { "type": "string", "description": "Assigned department" },
+        "assignedSiteId": { "type": "string", "description": "Site ID assigned to field worker" },
+        "assignedSiteName": { "type": "string", "description": "Human-readable name of assigned site" },
+        "phone": { "type": "string", "description": "Mobile contact number" }
+      },
+      "required": ["id", "badgeId", "email", "name", "role", "designation"]
+    },
+    "Site": {
+      "title": "EV Charging Site",
+      "description": "Individual EV charging station site profile and configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique site identifier slug" },
+        "name": { "type": "string", "description": "Site display name" },
+        "location": { "type": "string", "description": "Geographical address and city" },
+        "sanctionedLoad": { "type": "string", "description": "DISCOM sanctioned power capacity" },
+        "chargerCount": { "type": "string", "description": "Number and type of EVSE gun chargers" },
+        "transformerRating": { "type": "string", "description": "Substation transformer rating" },
+        "engineerInCharge": { "type": "string", "description": "Lead supervising engineer" },
+        "targetDate": { "type": "string", "description": "Target commissioning date" },
+        "status": { "type": "string", "enum": ["in-progress", "pending", "completed", "delayed"], "description": "Overall commissioning status" },
+        "customSpecs": { "type": "object", "description": "Custom technical specifications and parameters" },
+        "extraRequirements": { "type": "array", "description": "Extra site-specific statutory or civil requirements" },
+        "logs": { "type": "array", "description": "Daily site logbook entries" },
+        "coordinates": { "type": "object", "description": "Latitude and Longitude" }
+      },
+      "required": ["id", "name", "location", "status"]
+    },
+    "SiteTrackerState": {
+      "title": "Site Tracker Execution State",
+      "description": "Execution progress, BOQ line item actuals, and compliance checklist completions",
+      "type": "object",
+      "properties": {
+        "siteId": { "type": "string", "description": "Site identifier" },
+        "items": { "type": "object", "description": "Map of item states keyed by BOQ item code" },
+        "docs": { "type": "object", "description": "Map of document checklist states keyed by docKey" },
+        "updatedAt": { "type": "string", "description": "Last ISO timestamp of modification" },
+        "lastUpdatedBy": { "type": "string", "description": "Name or badge ID of updater" }
+      },
+      "required": ["siteId", "items", "docs"]
+    },
+    "SiteCustomBoq": {
+      "title": "Site Custom BOQ Categories",
+      "description": "Customized bill of quantities categories and items for this specific site",
+      "type": "object",
+      "properties": {
+        "siteId": { "type": "string", "description": "Site identifier" },
+        "categories": { "type": "array", "description": "Array of BOQ categories" },
+        "updatedAt": { "type": "string", "description": "Last update ISO timestamp" }
+      },
+      "required": ["siteId", "categories"]
+    },
+    "SitePhoto": {
+      "title": "Site Inspection Photo",
+      "description": "Geotagged inspection photo proof for compliance and execution checklist items",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Combined key {siteId}___{docKey}" },
+        "siteId": { "type": "string", "description": "Site identifier" },
+        "docKey": { "type": "string", "description": "Document or checklist item key" },
+        "dataUrl": { "type": "string", "description": "Base64 compressed image data URL" },
+        "uploadedBy": { "type": "string", "description": "Personnel who uploaded the evidence" },
+        "uploadedAt": { "type": "string", "description": "Timestamp of capture / upload" }
+      },
+      "required": ["id", "siteId", "docKey", "dataUrl"]
+    },
+    "SiteSnag": {
+      "title": "Site Snag / Defect Item",
+      "description": "Punch point or defect ticket with severity and photo resolution",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Snag ticket ID" },
+        "siteId": { "type": "string", "description": "Site ID" },
+        "title": { "type": "string", "description": "Snag description" },
+        "category": { "type": "string", "description": "Trade category" },
+        "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
+        "status": { "type": "string", "enum": ["open", "in-progress", "resolved"] },
+        "assignedTo": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "siteId", "title", "severity", "status"]
+    },
+    "SiteStatutory": {
+      "title": "Site Statutory Clearances",
+      "description": "DISCOM, CEIG, transformer test and meter synchronization stages",
+      "type": "object",
+      "properties": {
+        "siteId": { "type": "string", "description": "Site ID" },
+        "stages": { "type": "object", "description": "Map of statutory stage records" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["siteId", "stages"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccount" },
+      "description": "Registered personnel profiles (Controllers and Field Workers)"
+    },
+    "/sites/{siteId}": {
+      "schema": { "$ref": "#/entities/Site" },
+      "description": "EV charging station sites"
+    },
+    "/site_trackers/{siteId}": {
+      "schema": { "$ref": "#/entities/SiteTrackerState" },
+      "description": "Real-time execution status and checklist completions per site"
+    },
+    "/site_custom_boqs/{siteId}": {
+      "schema": { "$ref": "#/entities/SiteCustomBoq" },
+      "description": "Site-specific BOQ customizations"
+    },
+    "/site_photos/{photoId}": {
+      "schema": { "$ref": "#/entities/SitePhoto" },
+      "description": "Geotagged compliance and milestone inspection photos"
+    },
+    "/site_snags/{snagId}": {
+      "schema": { "$ref": "#/entities/SiteSnag" },
+      "description": "Site punch points, defect tickets and resolution proofs"
+    },
+    "/site_statutory/{siteId}": {
+      "schema": { "$ref": "#/entities/SiteStatutory" },
+      "description": "DISCOM & CEIG statutory clearance milestones and certificates"
+    }
+  }
+}

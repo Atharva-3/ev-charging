@@ -1,0 +1,6 @@
+{
+  "name": "VST BOQ & Compliance Tracker",
+  "description": "Approved BOQ execution, geotagged photo provisions, and BOQ-vs-actual cost tracking per site",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

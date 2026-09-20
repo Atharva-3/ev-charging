@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Personnel database
+    match /users/{userId} {
+      allow read, write: if isValidId(userId);
+    }
+
+    // Sites database
+    match /sites/{siteId} {
+      allow read, write: if isValidId(siteId);
+    }
+
+    // Real-time execution tracking & status
+    match /site_trackers/{siteId} {
+      allow read, write: if isValidId(siteId);
+    }
+
+    // Custom BOQ per site
+    match /site_custom_boqs/{siteId} {
+      allow read, write: if isValidId(siteId);
+    }
+
+    // Geotagged inspection photos & evidence
+    match /site_photos/{photoId} {
+      allow read, write: if isValidId(photoId);
+    }
+
+    // Snag tickets & punch points
+    match /site_snags/{snagId} {
+      allow read, write: if isValidId(snagId);
+    }
+
+    // Statutory approvals (DISCOM, CEIG)
+    match /site_statutory/{siteId} {
+      allow read, write: if isValidId(siteId);
+    }
+  }
+}

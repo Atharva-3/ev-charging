@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #ECE7DE;
+  --paper-raised: #F5F2EC;
+  --ink: #1F2D3A;
+  --steel: #6B7680;
+  --steel-line: #D4CEC1;
+  --amber: #D99A2B;
+  --green: #3F7D58;
+  --rust: #B4502E;
+  --blue: #3C6E96;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  background-color: #ded8cb;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+}
+
+.font-condensed {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.font-mono-plex {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Custom scrollbar for tables */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--steel-line);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel);
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .page-break-after {
+    page-break-after: always;
+  }
+  .avoid-break-inside {
+    page-break-inside: avoid;
+  }
+}
+
