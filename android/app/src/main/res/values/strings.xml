@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">VST BOQ &amp; Compliance Tracker</string>
+    <string name="title_activity_main">VST BOQ &amp; Compliance Tracker</string>
+    <string name="package_name">com.vst.boqtracker</string>
+    <string name="custom_url_scheme">com.vst.boqtracker</string>
+</resources>
